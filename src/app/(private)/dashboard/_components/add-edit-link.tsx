@@ -122,14 +122,7 @@ export default function AddEditLink({ setShowConfetti, userDetails }: any) {
       form.reset({});
     }
   }, [open]);
-
-  useEffect(() => {
-    const subscription = form.watch((value, { name, type }) =>
-      console.log(value, name, type)
-    );
-    return () => subscription.unsubscribe();
-  }, [form.watch]);
-
+  
   const types = ["youtube", "reddit", "telegram", "facebook"];
 
   return (

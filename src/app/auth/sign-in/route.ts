@@ -15,8 +15,6 @@ export async function POST(request: Request) {
     .eq("email", email as string)
     .single();
 
-  console.log(waitlistData, waitlistError);
-
   if (waitlistError) {
     return NextResponse.redirect(
       `${requestUrl.origin}/login?error=You need to be waitlist first to sign up&status=NOT_ON_WAITLIST_YET`,
