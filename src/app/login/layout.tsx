@@ -25,8 +25,6 @@ export default async function Layout({ children }: { children: ReactNode }) {
     pathname = pathname.substring(1);
   }
   
-  console.log(isLoggedInAndUserHandleNotCreated, pathname)
-
   if (isLoggedInAndUserHandleNotCreated && pathname !== "login/init") {
     redirect("/login/init");
   }

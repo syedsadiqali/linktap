@@ -30,8 +30,6 @@ export async function getLinksByUserHandle(user_handle?: string) {
     .select("*")
     .eq("user_handle", user_handle);
 
-  console.log(linksData, linksError, user_handle);
-
   return { linksData, linksError };
 }
 
