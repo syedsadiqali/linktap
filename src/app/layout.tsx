@@ -2,24 +2,25 @@ import { Toaster } from "@/components/ui/toaster";
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import TopLoader from "./top-loader";
 
 export const metadata = {
   title: "LinkTap",
   description: "Just Another Link Tree",
 };
 
-export default async function RootLayout({ children, theme }: any) {
-  console.log(theme)
+export default async function RootLayout({ children }: any) {
+  
   return (
     <html lang="en">
       <body className="flex flex-col">
-        <NextTopLoader color={"black"} showSpinner={false} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
+          >
+          <TopLoader/>
           {children}
         </ThemeProvider>
 

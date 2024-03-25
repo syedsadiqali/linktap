@@ -15,7 +15,6 @@ export async function sendEmail(
   variables: Record<string, string>
 ) {
   
-  console.log('shit')
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   const { data, error } = await resend.emails.send({
@@ -25,9 +24,6 @@ export async function sendEmail(
     react: React.createElement(template, variables)
   });
   
-  console.log('shirt1', data, error)
-  
-  console.log(data, error)
-  
+    
   return {data, error}
 }
