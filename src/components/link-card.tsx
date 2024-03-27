@@ -16,6 +16,7 @@ import { Button } from "./ui/button";
 import { deleteLinkByLinkId } from "@/lib/db/links";
 import { useLinks } from "@/hooks/useLinks";
 import { useAddEditDialog } from "@/hooks/useAddEditDialog";
+import Image from "next/image";
 
 interface IProps {
   link: LinksRow | Partial<LinksRow>;
@@ -51,12 +52,31 @@ const CardA = ({ link, isEditable, className }: IProps) => {
       }`}
     >
       <CardHeader>
-        <CardTitle className="inline-flex items-center">
-          <p className="line-clamp-2">{link.link_label}</p>
-        </CardTitle>
-        <CardDescription className="flex items-start flex-col">
-          {isEditable ? <p className="mb-8">{link.link_url}</p> : <></>}
-          {isEditable ? (
+        <div className="flex justify-center items-center">
+          {link.link_type === "custom" ? (
+            <></>
+          ) : (
+            <Image
+              src={`/icons/${link?.link_type}.svg`}
+              alt={link?.link_label || ""}
+              width={50}
+              height={50}
+              className={`cursor-pointer p-1 box-content rounded-full`}
+            />
+          )}
+
+          <div className={link.link_type === "custom" ? "" : "ml-2"}>
+            <CardTitle className="inline-flex items-center">
+              <p className="line-clamp-2">{link.link_label}</p>
+            </CardTitle>
+            <CardDescription className="flex items-start flex-col">
+              {isEditable ? <p className="">{link.link_url}</p> : <></>}
+            </CardDescription>
+          </div>
+        </div>
+
+        {isEditable ? (
+          <CardDescription className="!mt-8">
             <div className="flex gap-1">
               <Button
                 variant={"destructive"}
@@ -98,8 +118,8 @@ const CardA = ({ link, isEditable, className }: IProps) => {
                 />
               </Button>
             </div>
-          ) : null}
-        </CardDescription>
+          </CardDescription>
+        ) : null}
       </CardHeader>
       {isEditable ? (
         <div className="flex">

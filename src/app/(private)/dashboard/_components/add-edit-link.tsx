@@ -46,20 +46,22 @@ export default function AddEditLink({ setShowConfetti, userDetails }: any) {
     link_label: z.string().min(2, {
       message: "Please add a link label",
     }),
-    link_type: z.string({ required_error: "Please add a Link Type" }),
-    link_url: z.string().trim().url(),
+    link_type: z.string().min(2, { message: "Please add a Link Type" }),
+    link_url: z.string().trim().url({message: "Please add a valid Url"}),
   });
 
   const link_types = [
     { label: "Youtube", value: "youtube" },
     { label: "Facebook", value: "facebook" },
+    { label: "Reddit", value: "reddit" },
+    { label: "Telegram", value: "telegram" },
     { label: "Custom", value: "custom" },
   ] as const;
 
   type FormValues = z.infer<typeof formSchema>;
 
   const defaultValues: Partial<FormValues> = {
-    link_type: linkToEdit?.link_type ?? "custom",
+    link_type: linkToEdit?.link_type ?? "",
     link_label: linkToEdit?.link_label ?? "",
     link_url: linkToEdit?.link_url ?? "",
   };
@@ -122,8 +124,6 @@ export default function AddEditLink({ setShowConfetti, userDetails }: any) {
       form.reset({});
     }
   }, [open]);
-  
-  const types = ["youtube", "reddit", "telegram", "facebook"];
 
   return (
     <Form {...form}>
@@ -143,21 +143,27 @@ export default function AddEditLink({ setShowConfetti, userDetails }: any) {
                 <FormLabel>Link Type</FormLabel>
                 <FormControl key={1}>
                   <section className="flex gap-1">
-                    {types?.map((type, index) => {
+                    {link_types?.map((type, index) => {
                       return (
                         <Image
                           key={index}
-                          src={`/icons/${type}.svg`}
-                          alt={type}
+                          src={
+                            type.value !== "custom"
+                              ? `/icons/${type.value}.svg`
+                              : "/icons/question.svg"
+                          }
+                          alt={type.label}
                           width={50}
                           height={50}
                           className={`cursor-pointer p-1 box-content rounded-full border-[2px]  ${
-                            field.value === type
+                            field.value === type.value
                               ? "border-primary"
                               : "border-secondary"
                           }`}
                           onClick={() => {
-                            field.onChange(field.value === type ? "" : type);
+                            field.onChange(
+                              field.value === type.label ? "" : type.value
+                            );
                           }}
                         />
                       );

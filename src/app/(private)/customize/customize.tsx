@@ -40,7 +40,7 @@ export default function Customize({
           </div>
 
           <div className="w-1/5 mt-2 mb-8 text-center">
-            <p className="leading-7 [&:not(:first-child)]:mt-6">
+            <p className="leading-7 [&:not(:first-child)]:mt-6 whitespace-pre-wrap max-h-[80px] overflow-y-auto">
               {userDetails?.bio}
             </p>
           </div>
