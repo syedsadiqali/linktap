@@ -45,7 +45,7 @@ export const constructMetadata = ({
           url:
             process.env.NODE_ENV === "development"
               ? "/opengraph-image.png"
-              : `/opengraph-image.png`,
+              : `https://linktap.xyz/opengraph-image.png`,
           width: 800,
           height: 400,
         },
