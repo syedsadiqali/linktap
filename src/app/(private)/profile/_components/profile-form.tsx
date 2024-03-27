@@ -128,8 +128,8 @@ export function ProfileForm({
     if (imageRemovedSuccess && user?.id) {
       const { data: userUpdateSuccessdata, error: userUpdateError } =
         await updateUser({ avatar_id: null }, user.id as string);
-        
-        setAvatarToShow(null);
+
+      setAvatarToShow(null);
 
       if (userUpdateError) {
         toast({
@@ -157,8 +157,8 @@ export function ProfileForm({
   useEffect(() => {
     getImage(userDetails?.avatar_id as string);
   }, []);
-  
-  // we should not replace cacheId everytime 
+
+  // we should not replace cacheId everytime
 
   return (
     <Form {...form}>
@@ -308,13 +308,16 @@ export function ProfileForm({
             control={form.control}
             name="email"
             // TODO: build logic to change email
-            disabled={true}
             defaultValue={user?.email}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="me@mymail.com" {...field} />
+                  <Input
+                    placeholder="me@mymail.com"
+                    {...field}
+                    disabled={true}
+                  />
                 </FormControl>
                 <FormDescription>
                   This is your email. You will have to confirm if you want to

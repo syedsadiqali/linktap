@@ -1,9 +1,5 @@
-// export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export default async function Layout({ children }: any) {
-  return (
-    <>
-      <main className="">{children}</main>
-    </>
-  );
+  return <main className="">{children}</main>;
 }

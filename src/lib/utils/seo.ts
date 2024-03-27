@@ -34,25 +34,30 @@ export const constructMetadata = ({
     ),
 
     openGraph: {
-      title: openGraph?.title || config.appName,
-      description: openGraph?.description || config.appDescription,
+      title: openGraph?.title || title || config.appName,
+      description:
+        openGraph?.description || description || config.appDescription,
       url: openGraph?.url || `https://${config.domainName}/`,
       siteName: openGraph?.title || config.appName,
       // If you add an opengraph-image.(jpg|jpeg|png|gif) image to the /app folder, you don't need the code below
-      // images: [
-      //   {
-      //     url: `https://${config.domainName}/share.png`,
-      //     width: 1200,
-      //     height: 660,
-      //   },
-      // ],
+      images: [
+        {
+          url:
+            process.env.NODE_ENV === "development"
+              ? "/opengraph-image.png"
+              : `/opengraph-image.png`,
+          width: 800,
+          height: 400,
+        },
+      ],
       locale: "en_US",
       type: "website",
     },
 
     twitter: {
-      title: openGraph?.title || config.appName,
-      description: openGraph?.description || config.appDescription,
+      title: openGraph?.title || title || config.appName,
+      description:
+        openGraph?.description || description || config.appDescription,
       // If you add an twitter-image.(jpg|jpeg|png|gif) image to the /app folder, you don't need the code below
       // images: [openGraph?.image || defaults.og.image],
       card: "summary_large_image",
