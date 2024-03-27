@@ -1,14 +1,18 @@
 import { Toaster } from "@/components/ui/toaster";
-import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/theme-provider";
 import TopLoader from "./top-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 
-export const metadata = {
-  title: "LinkTap",
-  description: "Just Another Link Tree",
-};
+import config from "@/config";
+import { constructMetadata } from "@/lib/utils/seo";
+
+export const runtime = "edge";
+
+export const metadata = constructMetadata({
+  title: `${config.appName}`,
+  description: "Open Source Link In Bio Tool",
+});
 
 export default async function RootLayout({ children }: any) {
   
