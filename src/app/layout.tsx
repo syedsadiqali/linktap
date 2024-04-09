@@ -2,6 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import TopLoader from "./top-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { GoogleAnalytics } from "@next/third-parties/google"
+
 import "./globals.css";
 
 import config from "@/config";
@@ -29,7 +31,7 @@ export default async function RootLayout({ children }: any) {
           <TopLoader/>
           {children}
         </ThemeProvider>
-
+        <GoogleAnalytics gaId="G-3WDXTQNJ7G" />
         <Toaster />
       </body>
     </html>
