@@ -6,8 +6,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-export const runtime = 'edge';
-
 export default async function Layout({ children }: any) {
   const { user, userDetails } = await getCurrentAuthedUser();
 

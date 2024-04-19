@@ -8,8 +8,6 @@ import config from "@/config";
 import { getSortedLinks } from "@/lib/utils";
 import { getPublicUrl } from "@/lib/db/user";
 
-export const runtime = 'edge';
-
 let userCache = getUserDetails();
 
 export async function generateMetadata({}) {

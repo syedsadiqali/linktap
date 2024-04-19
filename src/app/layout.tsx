@@ -9,8 +9,6 @@ import "./globals.css";
 import config from "@/config";
 import { constructMetadata } from "@/lib/utils/seo";
 
-export const runtime = "edge";
-
 export const metadata = constructMetadata({
   title: `${config.appName}`,
   description: "Open Source Link In Bio Tool",
