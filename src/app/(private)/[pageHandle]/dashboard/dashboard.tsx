@@ -73,6 +73,7 @@ export default function Dashboard({
 
   useEffect(() => {
     console.log("data", dataB?.linksData);
+    // @ts-ignore
     setLinks(dataB?.linksData);
   }, [dataB]);
 
