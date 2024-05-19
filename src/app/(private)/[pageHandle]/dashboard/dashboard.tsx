@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import config from "@/config";
 import { getInitials } from "@/lib/utils";
 import { constructMetadata } from "@/lib/utils/seo";
-import { LinksRow, PagesRow } from "@/types/utils";
+import { LinksRow } from "@/types/utils";
 
 import AddEditLink from "./_components/add-edit-link";
 import LinksList from "./_components/links-list";
@@ -58,9 +58,6 @@ export default function Dashboard({
 
   let sortOrder = pageDetails?.links_sort_order as string[];
 
-  let isNoLinks = links?.length === 0;
-  // let isNoLinks = true;
-
   const getSortedLinks = useCallback(
     (linksData: any) => {
       return linksData.sort(
@@ -74,8 +71,8 @@ export default function Dashboard({
   useEffect(() => {
     console.log("data", dataB?.linksData);
     // @ts-ignore
-    setLinks(dataB?.linksData);
-  }, [dataB]);
+    setLinks(getSortedLinks(dataB?.linksData));
+  }, [dataB, setLinks, getSortedLinks]);
 
   useEffect(() => {
     async function getAvatarUrl() {
@@ -95,7 +92,7 @@ export default function Dashboard({
     if (!isDialogOpen && linkToEdit?.id) {
       setIsDialogOpen(false, undefined);
     }
-  }, [isDialogOpen, linkToEdit]);
+  }, [isDialogOpen, linkToEdit, setIsDialogOpen]);
   
   if(linksError || pageDetailsError){
     return <div>
