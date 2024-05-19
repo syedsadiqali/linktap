@@ -1,9 +1,13 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
-import { getPageByPageHandle, getPublicUrl, updateSortingOrder } from "@/server/actions/page";
+import {
+  getPageByPageHandle,
+  getPublicUrl,
+  updateSortingOrder,
+} from "@/server/actions/page";
 import PublicPage from "@/components/public-page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -38,10 +42,14 @@ export default function Dashboard({
   const { isDialogOpen, linkToEdit, setIsDialogOpen } = useAddEditDialog();
   const { links, setLinks } = useLinks((state) => state);
 
-  const { data: dataA, error: pageDetailsError, isLoading: pageLoading } = useQuery({
+  const {
+    data: dataA,
+    error: pageDetailsError,
+    isLoading: pageLoading,
+  } = useQuery({
     queryKey: [`dashboard-page-details`],
     queryFn: () => getPageByPageHandle(pageHandle),
-    gcTime: 0
+    staleTime: 1000,
   });
 
   const {
@@ -51,10 +59,10 @@ export default function Dashboard({
   } = useQuery({
     queryKey: [`dashboard-links`],
     queryFn: () => getLinksByPageHandle(pageHandle),
-    gcTime: 0
+    staleTime: 1000,
   });
-  
-  let pageDetails = dataA?.pageDetails
+
+  let pageDetails = dataA?.pageDetails;
 
   let sortOrder = pageDetails?.links_sort_order as string[];
 
@@ -93,17 +101,17 @@ export default function Dashboard({
       setIsDialogOpen(false, undefined);
     }
   }, [isDialogOpen, linkToEdit, setIsDialogOpen]);
-  
-  if(linksError || pageDetailsError){
-    return <div>
-      some error happend
-    </div>
+
+  if (linksError || pageDetailsError) {
+    return <div>some error happend</div>;
   }
-  
-  if(linksLoading || pageLoading){
-    return <div>
-      page loading
-    </div>
+
+  if (linksLoading || pageLoading) {
+    return (
+      <div className="flex justify-center col-span-2 space-y-6 w-full h-[200px] items-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
   }
 
   return (
