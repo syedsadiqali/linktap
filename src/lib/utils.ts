@@ -38,7 +38,11 @@ export function parseMiddlewareReq(req: NextRequest) {
 
   const fullKey = decodeURIComponent(path.slice(1)); // fullKey is the full path without the first slash (to account for multi-level subpaths, e.g. dub.sh/github/repo -> github/repo)
 
-  return { domain, key, fullKey, searchParams };
+  const lastPathSegment = path.split('/').pop();
+  
+  const fullUrl = req.nextUrl.href;
+  
+  return { domain, key, fullKey, searchParams, lastPathSegment, fullUrl };
 }
 
 export function getInitials(name: string): string {
@@ -67,6 +71,15 @@ export function isValidHttpUrl(string: string) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
+export const isValidUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 export const getSortedLinks = (
   links: Partial<LinksRow>[],
   sortOrder: number[]
@@ -81,4 +94,8 @@ export function uuidv4() {
   return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c: any) =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
+}
+
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

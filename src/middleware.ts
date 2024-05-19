@@ -2,9 +2,15 @@ import { updateSession } from "@/lib/supabase/middleware";
 import { parseMiddlewareReq } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
+import LinkMiddleware from "./lib/middleware/link";
+import { getPageByPageHandle } from "./server/actions/page";
+import { recordClick } from "./server/actions/tracking";
+import reservedRoutesFile from "../reserved_routes.json"
 
-export async function middleware(req: NextRequest) {
+const RESERVED_ROUTES = reservedRoutesFile.folderNames;
+
+export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", req.nextUrl.pathname);
 
@@ -14,12 +20,30 @@ export async function middleware(req: NextRequest) {
     },
   });
 
-  const { key, fullKey } = parseMiddlewareReq(req);
+  const { key, fullKey, lastPathSegment, fullUrl } = parseMiddlewareReq(req);
 
   if (key === "l") {
-    let url = fullKey.slice(2);
+    // let url = fullKey.slice(2);
 
-    return NextResponse.redirect(url);
+    return LinkMiddleware(req, ev);
+
+    // return NextResponse.redirect(url);
+  }
+    
+  // check if it's a public handle
+  if (!RESERVED_ROUTES.includes(`/${lastPathSegment}`)) {
+    const { pageDetails } = await getPageByPageHandle(key);
+    console.log('shit ', fullUrl)
+    if (pageDetails?.id) {
+      ev.waitUntil(
+        recordClick({
+          req,
+          id: pageDetails?.id.toString(),
+          ...(fullUrl && { url : fullUrl}),
+          root: true,
+        })
+      );
+    }
   }
 
   await updateSession(req);

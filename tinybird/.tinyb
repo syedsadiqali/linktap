@@ -1,0 +1,11 @@
+{
+    "host": "https://api.us-east.aws.tinybird.co",
+    "id": "91d8c04b-28ae-4857-a194-b06f4ae8ea26",
+    "name": "linktap",
+    "scope": "admin",
+    "token": "p.eyJ1IjogIjkxZDhjMDRiLTI4YWUtNDg1Ny1hMTk0LWIwNmY0YWU4ZWEyNiIsICJpZCI6ICI5NjZlNzNiNC01ZWE5LTQzZWMtODQxNi03NmUyNmMyNGEwNGIiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.hHVWAbhcNAbzFSZzTNpuK3drbDycaBDqKa_p4vdQDvg",
+    "tokens": {
+        "https://api.us-east.aws.tinybird.co": "p.eyJ1IjogIjkxZDhjMDRiLTI4YWUtNDg1Ny1hMTk0LWIwNmY0YWU4ZWEyNiIsICJpZCI6ICI5NjZlNzNiNC01ZWE5LTQzZWMtODQxNi03NmUyNmMyNGEwNGIiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.hHVWAbhcNAbzFSZzTNpuK3drbDycaBDqKa_p4vdQDvg"
+    },
+    "version": "3.10.0"
+}

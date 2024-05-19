@@ -63,7 +63,7 @@ const ImageUploadDialog = ({
         croppedAreaPixels as HTMLImageElement,
         rotation
       );
-
+      
       onSaveImage(croppedImage).then(() => {
         setIsLoading(false);
       });

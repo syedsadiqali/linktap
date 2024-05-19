@@ -37,73 +37,84 @@ export interface Database {
       links: {
         Row: {
           created_at: string
-          id: number
+          id: string
           link_clicks: number
           link_label: string
           link_type: string
           link_url: string
-          user_handle: string
+          page_id: string | null
         }
         Insert: {
           created_at?: string
-          id?: number
+          id?: string
           link_clicks?: number
           link_label: string
           link_type: string
           link_url: string
-          user_handle: string
+          page_id?: string | null
         }
         Update: {
           created_at?: string
-          id?: number
+          id?: string
           link_clicks?: number
           link_label?: string
           link_type?: string
           link_url?: string
-          user_handle?: string
+          page_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "links_user_handle_fkey"
-            columns: ["user_handle"]
+            foreignKeyName: "links_page_id_fkey"
+            columns: ["page_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["user_handle"]
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
           }
         ]
       }
-      users: {
+      pages: {
         Row: {
           avatar_id: string | null
           bio: string | null
           created_at: string
-          full_name: string | null
-          id: number
-          links_sort_order: number[]
-          user_handle: string | null
+          id: string
+          is_default: boolean | null
+          links_sort_order: string[]
+          page_handle: string | null
+          page_name: string | null
           user_id: string
         }
         Insert: {
           avatar_id?: string | null
           bio?: string | null
           created_at?: string
-          full_name?: string | null
-          id?: number
-          links_sort_order?: number[]
-          user_handle?: string | null
+          id?: string
+          is_default?: boolean | null
+          links_sort_order?: string[]
+          page_handle?: string | null
+          page_name?: string | null
           user_id: string
         }
         Update: {
           avatar_id?: string | null
           bio?: string | null
           created_at?: string
-          full_name?: string | null
-          id?: number
-          links_sort_order?: number[]
-          user_handle?: string | null
+          id?: string
+          is_default?: boolean | null
+          links_sort_order?: string[]
+          page_handle?: string | null
+          page_name?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "pages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       waitlist: {
         Row: {
@@ -137,7 +148,59 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_clicks_or_pageviews: {
+        Args: {
+          table_name: string
+          from_timestamp: string
+          to_timestamp: string
+          filter_string: string
+        }
+        Returns: {
+          count: number
+        }[]
+      }
+      get_grouped_data_query: {
+        Args: {
+          table_name: string
+          group_by_column: string
+          from_timestamp?: string
+          to_timestamp?: string
+          filter_string?: string
+        }
+        Returns: {
+          gbc: string
+          count: number
+        }[]
+      }
+      get_grouped_data_query1: {
+        Args: {
+          table_name: string
+          group_by_column: string
+          from_timestamp?: string
+          to_timestamp?: string
+          filter_string?: string
+        }
+        Returns: string
+      }
+      get_grouped_data_query2: {
+        Args: {
+          table_name: string
+          group_by_column: string
+          from_timestamp?: string
+          to_timestamp?: string
+          filter_string?: string
+        }
+        Returns: {
+          gbc: string
+          count: number
+        }[]
+      }
+      increment_link_clicks: {
+        Args: {
+          link_id: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

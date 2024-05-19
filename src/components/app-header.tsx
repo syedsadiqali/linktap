@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CircleUser, ExternalLink, Menu, Package2, Search } from "lucide-react";
+import { CircleUser, ExternalLink, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,14 +22,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { UsersRow } from "@/types/utils";
+import { PagesRow } from "@/types/utils";
 
 function AppHeader({
   user,
-  userDetails,
+  pageDetails,
 }: {
   user: any;
-  userDetails: UsersRow | null;
+  pageDetails: PagesRow | null;
 }) {
   const links: {
     href: string;
@@ -39,27 +39,21 @@ function AppHeader({
     external?: boolean;
   }[] = [
     {
-      href: "/dashboard",
+      href: `/${pageDetails?.page_handle}/dashboard`,
       label: "Dashobard",
     },
     {
-      href: "/profile",
+      href: `/${pageDetails?.page_handle}/profile`,
       label: "Profile",
     },
+
     {
-      href: `/${userDetails?.user_handle}`,
-      label: "Preview",
-      icon: <ExternalLink size={18} />,
-      external: true,
+      href: `/${pageDetails?.page_handle}/analytics?aFor=links&interval=24h`,
+      label: "Analytics",
     },
     {
       href: "/customize",
       label: "Customize",
-      comingSoon: true,
-    },
-    {
-      href: "/analytics",
-      label: "Analytics",
       comingSoon: true,
     },
   ];
@@ -98,7 +92,7 @@ function AppHeader({
               key={index}
               href={link.href}
               className={`${
-                pathname === link.href
+                link.href.includes(pathname)
                   ? "text-foreground"
                   : "text-muted-foreground"
               } transition-colors hover:text-foreground flex justify-center items-center gap-1`}
@@ -124,7 +118,7 @@ function AppHeader({
                 key={index}
                 href={`${link.comingSoon ? "" : link.href}`}
                 className={`${
-                  pathname === link.href || !link.comingSoon
+                  link.href.includes(pathname) || !link.comingSoon
                     ? "text-foreground"
                     : "text-muted-foreground"
                 } transition-colors hover:text-foreground`}
@@ -132,6 +126,19 @@ function AppHeader({
                 {link.label}
               </Link>
             ))}
+            <Link
+              key={100}
+              href={`/${pageDetails?.page_handle}`}
+              className={`${
+                pathname === pageDetails?.page_handle
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              } transition-colors hover:text-foreground flex gap-1`}
+              target={"_blank"}
+            >
+              Preview
+              <ExternalLink />
+            </Link>
           </nav>
         </SheetContent>
       </Sheet>
@@ -146,6 +153,19 @@ function AppHeader({
             />
           </div> */}
         </form>
+        <Link
+          key={99}
+          href={`/${pageDetails?.page_handle}`}
+          className={`hidden md:flex ${
+            pathname === pageDetails?.page_handle
+              ? "text-foreground"
+              : "text-muted-foreground"
+          } transition-colors hover:text-foreground flex justify-center items-center gap-1`}
+          target={"_blank"}
+        >
+          Preview
+          <ExternalLink />
+        </Link>
         <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

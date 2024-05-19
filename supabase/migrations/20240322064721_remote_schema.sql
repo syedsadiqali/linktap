@@ -16,3 +16,7 @@ $function$
 ;
 
 
+create or replace trigger after_insert_to_profile
+after insert on auth.users
+for each row
+execute function insert_user();

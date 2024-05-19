@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { setUserHandle } from "@/actions/userActions";
+import { setPageHandle } from "@/server/actions/page";
 
 interface IProps {
   user: any;
@@ -46,7 +46,7 @@ export default function Init({ user }: IProps) {
   });
 
   async function onSubmit(data: ProfileFormValues) {
-    let result = await setUserHandle({ newHandle: data.username });
+    let result = await setPageHandle({ newHandle: data.username });
 
     if (result?.state === "error") {
       form.setError("username", { type: "custom", message: result?.message });

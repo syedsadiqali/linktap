@@ -1,0 +1,13 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Attach",
+			"address": "127.0.0.1",
+			"port": 9230,
+			"request": "attach",
+			// "localRoot": "${workspaceFolder}/frontend", # just if next app is not inside your root dir
+			"skipFiles": ["<node_internals>/**"],
+			"type": "node"
+		  }]
+  }

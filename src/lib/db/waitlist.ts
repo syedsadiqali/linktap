@@ -1,7 +1,7 @@
 import { WaitlistEnter } from "@/emails/waitlist-enter";
 
 import { createClient } from "@/lib/supabase/client";
-import { sendEmail } from "@/actions/commonActions";
+import { sendEmail } from "@/server/actions/common";
 
 export async function saveWaitlistUser(email: string) {
   const supabase = createClient();

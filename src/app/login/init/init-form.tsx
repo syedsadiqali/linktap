@@ -27,24 +27,23 @@ import ImageUploadDialog from "@/components/image-upload-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
-import {
-  getPublicUrl,
-  removeImage,
-  createOrUpdateAvatar,
-  updateUser,
-} from "@/lib/db/user";
+// import {
+//   getPublicUrl,
+//   removeImage,
+//   createOrUpdateAvatar,
+// } from "@/lib/db/page";
 import { Textarea } from "@/components/ui/textarea";
 
 interface IProps {
   user: any;
   userDetails: any;
-  revalidateCache: any;
+  revalidateData: any;
 }
 
 export default function InitForm({
   user,
   userDetails,
-  revalidateCache,
+  revalidateData,
 }: IProps) {
   const [open, setOpen] = useState(false);
 
@@ -87,26 +86,26 @@ export default function InitForm({
 
   async function onSubmit(data: ProfileFormValues) {
     setIsLoading(true);
-    if (userDetails?.user_handle) {
-      const { data: dataA, error } = await updateUser(
-        data,
-        userDetails?.user_handle
-      );
+    // if (userDetails?.user_handle) {
+    //   const { data: dataA, error } = await updateUser(
+    //     data,
+    //     userDetails?.user_handle
+    //   );
 
-      if (error) {
-        form.setError("username", {
-          type: "custom",
-          message:
-            error?.code === "23505"
-              ? "Username already exists!!"
-              : error?.message,
-        });
-      } else {
-        toast({ title: "Success", description: "Data Updation Succesfull" });
-      }
-      setIsLoading(false);
-      revalidateCache("/", true);
-    }
+    //   if (error) {
+    //     form.setError("username", {
+    //       type: "custom",
+    //       message:
+    //         error?.code === "23505"
+    //           ? "Username already exists!!"
+    //           : error?.message,
+    //     });
+    //   } else {
+    //     toast({ title: "Success", description: "Data Updation Succesfull" });
+    //   }
+    //   setIsLoading(false);
+    //   revalidateData("/", true);
+    // }
   }
 
   async function handleRemoveImage() {
@@ -121,27 +120,27 @@ export default function InitForm({
       });
     }
 
-    if (imageRemovedSuccess && userDetails?.user_handle) {
-      const { data: userUpdateSuccessdata, error: userUpdateError } =
-        await updateUser(
-          { avatar_id: null },
-          userDetails.user_handle as string
-        );
+    // if (imageRemovedSuccess && userDetails?.user_handle) {
+    //   const { data: userUpdateSuccessdata, error: userUpdateError } =
+    //     await updateUser(
+    //       { avatar_id: null },
+    //       userDetails.user_handle as string
+    //     );
 
-      if (userUpdateError) {
-        toast({
-          title: "Error",
-          description: `Can't Remove Image because ${userUpdateError.message}`,
-          variant: "destructive",
-        });
-      } else {
-        form.setValue("avatar_id", null);
-        toast({
-          title: "Success",
-          description: `Image Removed Successfully`,
-        });
-      }
-    }
+    //   if (userUpdateError) {
+    //     toast({
+    //       title: "Error",
+    //       description: `Can't Remove Image because ${userUpdateError.message}`,
+    //       variant: "destructive",
+    //     });
+    //   } else {
+    //     form.setValue("avatar_id", null);
+    //     toast({
+    //       title: "Success",
+    //       description: `Image Removed Successfully`,
+    //     });
+    //   }
+    // }
   }
 
   return (
@@ -232,10 +231,10 @@ export default function InitForm({
                                 );
                               }
 
-                              updateUser(
-                                { avatar_id: publicUrl.publicUrl },
-                                userDetails.user_handle as string
-                              );
+                              // updateUser(
+                              //   { avatar_id: publicUrl.publicUrl },
+                              //   userDetails.user_handle as string
+                              // );
 
                               setOpen(false);
                             }}

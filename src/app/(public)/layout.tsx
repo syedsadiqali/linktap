@@ -1,4 +1,9 @@
+import { Suspense } from "react";
 
 export default async function Layout({ children }: any) {
-  return <main className="">{children}</main>;
+  return (
+    <Suspense fallback={<p>loading...</p>}>
+      <main className="">{children}</main>
+    </Suspense>
+  );
 }

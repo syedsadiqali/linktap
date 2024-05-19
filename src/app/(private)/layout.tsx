@@ -1,16 +1,25 @@
-import { getCurrentAuthedUser } from "@/actions/userActions";
+import { getPageByPageHandle } from "@/server/actions/page";
+import { getCurrentAuthedUser } from "@/server/actions/user";
 import AppHeader from "@/components/app-header";
 // import AppHeader from "@/components/AppHeader";
 import { headers } from "next/headers";
+import Link from "next/link";
 
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 export default async function Layout({ children }: any) {
-  const { user, userDetails } = await getCurrentAuthedUser();
+  // add default page to query params :-
 
-  const isLoggedInAndUserHandleNotCreated =
-    user?.id && !userDetails?.user_handle;
+  // when the user comes through init, mark the first created page as default page
+  //
+
+  const { user } = await getCurrentAuthedUser();
+
+  const { pageDetails } = await getPageByPageHandle();
+
+  const isLoggedInAndPageHandleNotCreated =
+    user?.id && !pageDetails?.page_handle;
 
   const headersList = headers();
 
@@ -19,13 +28,13 @@ export default async function Layout({ children }: any) {
   while (pathname.charAt(0) === "/") {
     pathname = pathname.substring(1);
   }
-  
-  if(!user) {
-    redirect('/login');
+
+  if (!user) {
+    // redirect("/login");
   }
 
-  if (isLoggedInAndUserHandleNotCreated && pathname !== "login/init") {
-    redirect("/login/init");
+  if (isLoggedInAndPageHandleNotCreated && pathname !== "login/init") {
+    // redirect("/login/init");
   }
 
   return (
@@ -36,7 +45,7 @@ export default async function Layout({ children }: any) {
             <div className="flex w-full px-4 lg:px-40 py-4 items-center text-center gap-8 justify-between h-[69px]" />
           }
         >
-          <AppHeader user={user} userDetails={userDetails} />
+          <AppHeader user={user} pageDetails={pageDetails} />
         </Suspense>
       </section>
       <main className="">{children}</main>

@@ -1,5 +1,5 @@
 import { LinksRow } from "@/types/utils";
-import { getCurrentAuthedUser, updateSortingOrder } from "./user";
+import { getPageByPageHandle, updateSortingOrder } from "./page";
 import { createClient } from "@/lib/supabase/client";
 
 const handleErrors = (e: unknown) => {
@@ -12,20 +12,26 @@ const handleErrors = (e: unknown) => {
   return errMsg;
 };
 
-export async function getLinksByUserHandle(user_handle?: string) {
+export async function getLinksByPageHandle(page_handle: string) {
   const supabase = createClient();
+  
+  const { data: linksData, error: linksError } = await supabase
+    .from("links")
+    .select("*")
+    .eq("page_handle", page_handle);
 
-  // get the user_handle of current authed user if not provided
+  return { linksData, linksError };
+}
 
-  if (!user_handle) {
-    const { userDetails } = await getCurrentAuthedUser();
-    user_handle = userDetails?.user_handle as string;
-  }
+export async function getLinkByLinkUrl(link_url: string) {
+  
+  const supabase = createClient();
 
   const { data: linksData, error: linksError } = await supabase
     .from("links")
     .select("*")
-    .eq("user_handle", user_handle);
+    .eq("link_url", link_url)
+    .single();
 
   return { linksData, linksError };
 }
@@ -34,8 +40,7 @@ export async function getLinksByUserHandle(user_handle?: string) {
 export async function addLinkFn(linkData: Partial<LinksRow>) {
   const supabase = createClient();
 
-  // get the current authed user.
-  const { userDetails } = await getCurrentAuthedUser();
+  const { pageDetails } = await getPageByPageHandle(linkData?.page_handle as string);
 
   const { link_url, link_type, link_label } = linkData as LinksRow;
 
@@ -46,7 +51,7 @@ export async function addLinkFn(linkData: Partial<LinksRow>) {
       link_url: link_url,
       link_type: link_type,
       link_label: link_label,
-      user_handle: userDetails?.user_handle as string,
+      page_handle: pageDetails?.page_handle as string,
     })
     .select()
     .single();
@@ -59,8 +64,8 @@ export async function addLinkFn(linkData: Partial<LinksRow>) {
     throw new Error(errorMessage);
   }
 
-  if (newLink && userDetails?.links_sort_order) {
-    await updateSortingOrder([newLink.id, ...userDetails?.links_sort_order]);
+  if (newLink && pageDetails?.links_sort_order) {
+    await updateSortingOrder([newLink.id, ...pageDetails?.links_sort_order], pageDetails?.page_handle as string);
   }
 
   return newLink;
@@ -91,7 +96,7 @@ export async function updateLinkByLinkId(
   return linksData;
 }
 
-export async function deleteLinkByLinkId(linkId: number) {
+export async function deleteLinkByLinkId(linkId: string) {
   const supabase = createClient();
 
   // delete link of that user id and revalidate the page
@@ -109,23 +114,23 @@ export async function deleteLinkByLinkId(linkId: number) {
   // }
 
   // get user data
-  const { data: userDetail } = await supabase
-    .from("users")
+  const { data: pageDetail } = await supabase
+    .from("pages")
     .select("links_sort_order")
-    .eq("user_handle", deletedLink?.user_handle as string)
+    .eq("page_id", deletedLink?.page_id as string)
     .single();
 
-  let newUserDetail = { ...userDetail };
+  let newPageDetail = { ...pageDetail };
 
-  newUserDetail.links_sort_order?.splice(
-    newUserDetail.links_sort_order.indexOf(deletedLink?.id as number),
+  newPageDetail.links_sort_order?.splice(
+    newPageDetail.links_sort_order.indexOf(deletedLink?.id as number),
     1
   );
 
   // update the new sort order
   await supabase
-    .from("users")
-    .update({ ...newUserDetail })
-    .eq("user_handle", deletedLink?.user_handle as string);
+    .from("pages")
+    .update({ ...newPageDetail })
+    .eq("page_id", deletedLink?.page_id as string);
 
 }

@@ -13,4 +13,4 @@ import { Database } from "./supabase";
 
 export type LinksRow = Database["public"]["Tables"]["links"]["Row"];
 
-export type UsersRow = Database["public"]["Tables"]["users"]["Row"];
+export type PagesRow = Database["public"]["Tables"]["pages"]["Row"];

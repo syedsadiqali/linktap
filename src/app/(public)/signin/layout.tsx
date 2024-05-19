@@ -7,6 +7,6 @@ export const metadata = constructMetadata({
   canonicalUrlRelative: "/auth/signin",
 });
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { readonly children: ReactNode }) {
   return <>{children}</>;
 }

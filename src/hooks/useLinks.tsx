@@ -5,8 +5,8 @@ interface LinkState {
   links: LinksRow[];
   addLink: (newLink: LinksRow) => void;
   setLinks: (links: LinksRow[]) => void;
-  deleteLink: (linkId: number) => void;
-  updateLink: (linkId: number, newData: Partial<LinksRow> | LinksRow) => void;
+  deleteLink: (linkId: string) => void;
+  updateLink: (linkId: string, newData: Partial<LinksRow> | LinksRow) => void;
 }
 
 export const useLinks = create<LinkState>((set) => ({
@@ -19,7 +19,7 @@ export const useLinks = create<LinkState>((set) => ({
     set((state) => {
       return { links: [newLink, ...state.links] };
     }),
-  deleteLink: (linkId: number) =>
+  deleteLink: (linkId: string) =>
     set((state) => {
       let a = state.links.findIndex((link) => link.id === linkId);
 

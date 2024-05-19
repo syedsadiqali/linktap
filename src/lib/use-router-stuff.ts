@@ -1,9 +1,11 @@
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function useRouterStuff() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams<{ tag: string; item: string }>()
+  
   const searchParamsObj = Object.fromEntries(searchParams);
 
   const getQueryString = (kv?: Record<string, string>) => {
@@ -56,5 +58,6 @@ export default function useRouterStuff() {
     searchParamsObj,
     queryParams,
     getQueryString,
+    params
   };
 }

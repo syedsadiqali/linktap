@@ -4,19 +4,17 @@ import { constructMetadata } from "@/lib/utils/seo";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { getCurrentAuthedUser } from "@/actions/userActions";
+import { getCurrentAuthedUser } from "@/server/actions/user";
+import { getPageByPageHandle } from "@/server/actions/page";
 
-export const metadata = constructMetadata({
-  title: `Sign-in to ${config.appName}`,
-  //   canonicalUrlRelative: "/auth/signin",
-});
+// export const metadata = constructMetadata({
+//   title: `Sign-in to ${config.appName}`,
+//   //   canonicalUrlRelative: "/auth/signin",
+// });
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const { user, userDetails } = await getCurrentAuthedUser();
 
-  const isLoggedInAndUserHandleNotCreated =
-    user?.id && !userDetails?.user_handle;
-
+  
   const headersList = headers();
 
   let pathname = headersList.get("x-pathname") || "";
@@ -25,13 +23,17 @@ export default async function Layout({ children }: { children: ReactNode }) {
     pathname = pathname.substring(1);
   }
   
-  if (isLoggedInAndUserHandleNotCreated && pathname !== "login/init") {
-    redirect("/login/init");
-  }
+  // console.log('waka waka 1', user)
 
-  if (!isLoggedInAndUserHandleNotCreated && user?.id) {
-    redirect("/dashboard");
-  }
+  // if (!user?.id && pathname !== "login") {
+  //   console.log('me dobara login yaha hu')
+
+  //   // redirect("/login");
+  // }
+  
+  // console.log('me true hun', isLoggedInAndPageHandleNotCreated, pathname)
+
+
 
   return (
     <div className="flex h-[100vh]">

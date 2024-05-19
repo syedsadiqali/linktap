@@ -8,7 +8,7 @@ function TopLoader() {
 
   return (
     <NextTopLoader
-      color={theme === "dark" ? "white" : "black"}
+      // color={theme === "dark" ? "white" : "black"}
       showSpinner={false}
     />
   );
