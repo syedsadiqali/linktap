@@ -27,10 +27,10 @@ function BarChartA({ data, key }: any) {
     ...barsToAdd,
   ];
 
-  const renderCustomizedLabel = (props) => {
+  const renderCustomizedLabel = (props: any) => {
     const { x, y, width, height, value } = props;
     const radius = 10;
-    const maxValue = Math.max(...data.map((entry) => entry.count)); // Find the maximum value in the data
+    const maxValue = Math.max(...data.map((entry:any) => entry.count)); // Find the maximum value in the data
 
     return (
       <g>

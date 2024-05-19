@@ -4,7 +4,7 @@
 // 1. for=links,page | from | to | browser | country | region | city | device
 
 import ClickChart from "./_components/click-chart";
-import { getTrackingData } from "@/server/actions/tracking";
+// import { getTrackingData } from "@/server/actions/tracking";
 
 export default async function Clicks({
   aFor,
@@ -15,7 +15,7 @@ export default async function Clicks({
   from?: string;
   to?: string;
 }) {
-  const data = await getTrackingData({ aFor, from, to, groupedBy: "date" });
+  // const data = await getTrackingData({ aFor, from, to, groupedBy: "date" });
 
-  return <ClickChart data={data} />;
+  return <ClickChart data={{}} />;
 }

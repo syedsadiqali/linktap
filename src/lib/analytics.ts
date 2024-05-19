@@ -224,7 +224,9 @@ export const getAnalytics = async ({
   }
 
   VALID_ANALYTICS_FILTERS.forEach((filter) => {
+    //@ts-ignore
     if (rest[filter] !== undefined) {
+      //@ts-ignore
       url.searchParams.append(filter, rest[filter]);
     }
   });

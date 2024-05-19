@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { NextRequest, userAgent } from "next/server";
 import { detectBot } from "@/lib/middleware/utils";
@@ -17,6 +17,7 @@ import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import { getAnalytics } from "@/lib/analytics";
 import { getPageByPageHandle } from "./page";
+import { Interval } from "@/types/utils";
 
 export async function recordClick({
   req,
@@ -149,21 +150,21 @@ export async function getLinkTrackingData(link_id: number) {
   return data;
 }
 
-export async function getLinkTrackingClicks(link_id: number, interval: string) {
-  const supabase = createClient();
+// export async function getLinkTrackingClicks(link_id: number, interval: string) {
+//   const supabase = createClient();
 
-  const { data, error } = await supabase.rpc("get_click_data", {
-    link_id_input: link_id,
-    interval_interval: "30 days",
-  });
+//   const { data, error } = await supabase.rpc("get_clicks_or_pageviews", {
+//     link_id_input: link_id,
+//     interval_interval: "30 days",
+//   });
 
-  if (error) {
-    console.log(error);
-    // throw new Error({message: JSON.parse(error, null, '/n')})
-  }
+//   if (error) {
+//     console.log(error);
+//     // throw new Error({message: JSON.parse(error, null, '/n')})
+//   }
 
-  return data;
-}
+//   return data;
+// }
 
 const inputSchema = z.object({
   groupedBy: z.enum(["browser", "device", "country", "city", "region", "date"]),
@@ -203,20 +204,20 @@ interface InputSchema {
   sort?: string | null;
 }
 
-export async function getTrackingData({
-  groupedBy,
-  granularity,
-  aFor,
-  from,
-  to,
-  filter,
-  sort,
-}: InputSchema) {
-  const supabase = createClient();
+// export async function getTrackingData({
+//   groupedBy,
+//   granularity,
+//   aFor,
+//   from,
+//   to,
+//   filter,
+//   sort,
+// }: InputSchema) {
+//   const supabase = createClient();
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+//   const {
+//     data: { session },
+//   } = await supabase.auth.getSession();
 
   // if (!session) {
   //   return new Response("UnAuthorized", { status: 401 });
@@ -252,37 +253,37 @@ export async function getTrackingData({
   // let { aFor, from, to, filter, sort, groupedBy, granularity } =
   //   requestjson.data;
 
-  let fromD, toD, sortD, filterD, groupD;
+  // let fromD, toD, sortD, filterD, groupD;
 
-  if (!from) {
-    fromD = new Date(0).toISOString();
-  } else {
-    fromD = new Date(from).toISOString();
-  }
+  // if (!from) {
+  //   fromD = new Date(0).toISOString();
+  // } else {
+  //   fromD = new Date(from).toISOString();
+  // }
 
-  if (!to) {
-    toD = new Date().toISOString();
-  } else {
-    toD = new Date(to).toISOString();
-  }
+  // if (!to) {
+  //   toD = new Date().toISOString();
+  // } else {
+  //   toD = new Date(to).toISOString();
+  // }
 
-  if (!filter) {
-    filterD = "";
-  } else {
-    const entries = Object.entries(filter);
-    const keyValuePairs = entries.map(([key, value]) => `${key}='${value}'`);
-    filterD = ` ${keyValuePairs.join(" and ")} `;
-  }
+  // if (!filter) {
+  //   filterD = "";
+  // } else {
+  //   const entries = Object.entries(filter);
+  //   const keyValuePairs = entries.map(([key, value]) => `${key}='${value}'`);
+  //   filterD = ` ${keyValuePairs.join(" and ")} `;
+  // }
 
-  if (!sort) {
-    sortD = "";
-  }
+  // if (!sort) {
+  //   sortD = "";
+  // }
 
-  if (groupedBy == "date") {
-    // we will use date_truc
+  // if (groupedBy == "date") {
+  //   // we will use date_truc
 
-    groupD = `date_trunc('${granularity || "day"}', timestamp)`;
-  }
+  //   groupD = `date_trunc('${granularity || "day"}', timestamp)`;
+  // }
 
   // const response = await getAnalytics({
   //   // workspaceId can be undefined (for public links that haven't been claimed/synced to a workspace)
@@ -329,14 +330,14 @@ export async function getTrackingData({
   //
   //
 
-  return data;
+  // return data;
 
   // convert these to utc and send a rpc call to supabase to get the data.
 
   // let fromInUtc = new Date(from).toISOString();
 
   // let toInUtc = new Date(to).toISOString();
-}
+// }
 
 export const getAnalyticsData = async ({
   page_handle,
@@ -349,10 +350,9 @@ export const getAnalyticsData = async ({
   page_handle?: string;
   linkId?: string;
   aFor?: string;
-  interval?: "1h" | "24h" | "7d" | "30d" | "90d" | "all" | undefined;
+  interval?: Interval;
   aType?: string;
 }) => {
-  // get pageId from PageHandle
   if (aFor === "page") {
     const { pageDetails } = await getPageByPageHandle(page_handle);
 
@@ -363,6 +363,7 @@ export const getAnalyticsData = async ({
   const response = await getAnalytics({
     ...(page_handle && { workspaceId: page_handle }),
     ...(linkId && { linkId: linkId }),
+    // @ts-ignore
     endpoint: aType,
     interval: interval,
     // ...parsedParams,

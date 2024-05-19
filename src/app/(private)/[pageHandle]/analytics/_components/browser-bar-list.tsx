@@ -3,19 +3,18 @@
 import { Button } from "@/components/ui/button";
 import { getAnalyticsData } from "@/server/actions/tracking";
 import { useQuery } from "@tanstack/react-query";
-import { BarList, LineChart } from "@tremor/react";
-import { useCallback, useEffect, useState } from "react";
+import { BarList } from "@tremor/react";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Interval } from "@/types/utils";
 
 export function BrowserBarList({
   aFor,
@@ -23,10 +22,10 @@ export function BrowserBarList({
   interval,
   linkId,
 }: {
-  aFor: string;
-  pageHandle: string;
-  readonly interval: string;
-  linkId?: string;
+  readonly aFor: string;
+  readonly pageHandle: string;
+  readonly interval: Interval;
+  readonly linkId?: string;
 }) {
   const {
     data: dataA,
@@ -40,13 +39,13 @@ export function BrowserBarList({
       getAnalyticsData({
         aFor: aFor,
         page_handle: pageHandle,
-        interval: interval as string,
+        interval: interval,
         linkId: linkId,
         aType: "browser",
       }),
   });
 
-  let data = dataA?.map((a) => {
+  let data = dataA?.map((a: any) => {
     return {
       name: a.browser,
       value: a.clicks,

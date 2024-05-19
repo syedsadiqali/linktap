@@ -12,6 +12,7 @@ import {
 
 import { scaleLinear } from "d3-scale";
 
+// @ts-ignore
 const colorScale = scaleLinear().domain([0, 100]).range(["#ffedea", "#ff5233"]);
 
 export const MapChart = ({ data }: any) => {
@@ -42,7 +43,7 @@ export const MapChart = ({ data }: any) => {
               const d = data?.find((s: any) => s.gbc === geo.properties.name);
 
               let fill = d ? colorScale(d["count"]) : "#F5F4F6";
-
+              //@ts-ignore
               return <Geography key={geo.rsmKey} geography={geo} fill={fill} />;
             })
           }

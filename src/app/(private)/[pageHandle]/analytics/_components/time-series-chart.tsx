@@ -63,7 +63,7 @@ export function TimeSeriesChart({ aFor, pageHandle, interval, linkId }: any) {
     [interval]
   );
 
-  let data = dataA?.map((a) => {
+  let data = dataA?.map((a: any) => {
     return {
       date: formatDate(new Date(a.start)),
       clicks: a.clicks,

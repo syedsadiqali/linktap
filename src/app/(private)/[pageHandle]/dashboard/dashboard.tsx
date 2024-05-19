@@ -41,7 +41,7 @@ export default function Dashboard({
   const { isDialogOpen, linkToEdit, setIsDialogOpen } = useAddEditDialog();
   const { links, setLinks } = useLinks((state) => state);
 
-  let sortOrder = pageDetails?.links_sort_order as number[];
+  let sortOrder = pageDetails?.links_sort_order as string[];
 
   let isNoLinks = links?.length === 0;
   // let isNoLinks = true;

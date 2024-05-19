@@ -66,7 +66,7 @@ export async function addLinkFn(
       link_url: link_url,
       link_type: link_type,
       link_label: link_label,
-      page_id: pageDetails.id,
+      page_id: pageDetails?.id,
     })
     .select()
     .single();
@@ -103,7 +103,7 @@ export async function addLinkFn(
 }
 
 export async function updateLinkByLinkId(
-  linkId: number,
+  linkId: string,
   dataToUpdate: Partial<LinksRow>
 ) {
   // update the link data and then revalidate the page, no need to change the sort order anywhere.
@@ -174,16 +174,16 @@ export async function deleteLinkByLinkId(linkId: string) {
       .update({ ...newUserDetail })
       .eq("id", deletedLink?.page_id as string);
       
-      // record link in Tinybird
-      recordLink({
-        link: {
-          id: newLink.id,
-          domain: "",
-          key: newLink.id,
-          url: newLink.link_url,
-          pageId: pageDetails?.page_handle,
-        },  
-      });
+      // Todo: record deleted link in Tinybird
+      // recordLink({
+      //   link: {
+      //     id: newLink.id,
+      //     domain: "",
+      //     key: newLink.id,
+      //     url: newLink.link_url,
+      //     pageId: pageDetails?.page_handle,
+      //   },  
+      // });
 
     revalidatePath("/dashboard");
   } catch (e) {

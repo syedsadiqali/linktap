@@ -4,7 +4,6 @@
 // 1. for=links,page | from | to | browser | country | region | city | device
 
 import MapChart from "./_components/map-chart";
-import { getTrackingData } from "@/server/actions/tracking";
 
 export default async function WorldMap({
   aFor,
@@ -15,7 +14,7 @@ export default async function WorldMap({
   from?: string;
   to?: string;
 }) {
-  const data = await getTrackingData({ aFor, from, to, groupedBy: "country" });
+  // const data = await getTrackingData({ aFor, from, to, groupedBy: "country" });
 
-  return <MapChart data={data} />;
+  return <MapChart data={{}} />;
 }

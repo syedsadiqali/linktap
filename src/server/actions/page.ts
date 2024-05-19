@@ -43,7 +43,7 @@ export const getPageByPageHandle = async (pageHandle?: string) => {
 };
 
 export async function updateSortingOrder(
-  newSortOrder: number[],
+  newSortOrder: string[],
   pageHandle: string
 ) {
   const supabase = createClient();
@@ -148,7 +148,7 @@ export async function getPublicUrl(avatarId: string) {
   return publicUrl;
 }
 
-export async function removeImage(avatarId: string) {
+export async function removeImage(avatarId: string){
   const supabase = createClient();
 
   const {
@@ -159,7 +159,7 @@ export async function removeImage(avatarId: string) {
     .from("avatars")
     .remove([`${avatarId}.png`]);
 
-  return;
+  return {data, error};
 }
 
 export async function createOrUpdateAvatar(avatarId: string, image: any) {

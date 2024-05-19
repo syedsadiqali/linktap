@@ -40,7 +40,7 @@ export async function getLinkByLinkUrl(link_url: string) {
 export async function addLinkFn(linkData: Partial<LinksRow>) {
   const supabase = createClient();
 
-  const { pageDetails } = await getPageByPageHandle(linkData?.page_handle as string);
+  const { pageDetails } = await getPageByPageHandle(linkData?.page_id as string);
 
   const { link_url, link_type, link_label } = linkData as LinksRow;
 
@@ -51,7 +51,7 @@ export async function addLinkFn(linkData: Partial<LinksRow>) {
       link_url: link_url,
       link_type: link_type,
       link_label: link_label,
-      page_handle: pageDetails?.page_handle as string,
+      page_id: pageDetails?.id
     })
     .select()
     .single();
@@ -123,7 +123,7 @@ export async function deleteLinkByLinkId(linkId: string) {
   let newPageDetail = { ...pageDetail };
 
   newPageDetail.links_sort_order?.splice(
-    newPageDetail.links_sort_order.indexOf(deletedLink?.id as number),
+    newPageDetail.links_sort_order.indexOf(deletedLink?.id as string),
     1
   );
 

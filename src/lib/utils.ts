@@ -82,11 +82,11 @@ export const isValidUrl = (url: string) => {
 
 export const getSortedLinks = (
   links: Partial<LinksRow>[],
-  sortOrder: number[]
+  sortOrder: string[]
 ): Partial<LinksRow>[] => {
   return links.sort(
     (a: Partial<LinksRow>, b: Partial<LinksRow>) =>
-      sortOrder?.indexOf(a?.id as number) - sortOrder?.indexOf(b?.id as number)
+      sortOrder?.indexOf(a?.id as string) - sortOrder?.indexOf(b?.id as string)
   );
 };
 

@@ -17,7 +17,7 @@ export default function ClickChart({
   console.log("data ", data);
   const chartData = useMemo(
     () =>
-      data?.map(({ gbc, count }) => ({
+      data?.map(({ gbc, count }: {gbc: any, count:any}) => ({
         date: new Date(gbc),
         values: { count },
       })) ?? null,

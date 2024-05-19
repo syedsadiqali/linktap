@@ -18,6 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Interval } from "@/types/utils";
 
 export const revalidate = 0;
 
@@ -53,7 +54,7 @@ export default function PageA({
           <BrowserBarList
             aFor={aFor}
             pageHandle={params.pageHandle}
-            interval={interval}
+            interval={interval as Interval}
           />
         </div>
 

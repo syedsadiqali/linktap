@@ -37,7 +37,7 @@ export function LineChartUsageExampleWithCustomTooltip({
 		[interval],
 	  );
 	  
-  let data = chartData.map((a) => {
+  let data = chartData.map((a:any) => {
     let date = new Date(a.start).toLocaleDateString("en-GB", {
       day: "numeric",
       month: "short",
