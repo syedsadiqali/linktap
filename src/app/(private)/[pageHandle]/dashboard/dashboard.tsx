@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
-import { updateSortingOrder } from "@/server/actions/page";
+import { getPageByPageHandle, getPublicUrl, updateSortingOrder } from "@/server/actions/page";
 import PublicPage from "@/components/public-page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import LinksList from "./_components/links-list";
 import { useLinks } from "@/hooks/useLinks";
 import { useAddEditDialog } from "@/hooks/useAddEditDialog";
 import ConfettiA from "@/components/confetti";
+import { useQuery } from "@tanstack/react-query";
+import { getLinksByPageHandle } from "@/server/actions/links";
 
 export const metadata = constructMetadata({
   title: `Dashboard – ${config.appName}`,
@@ -26,20 +28,33 @@ export const metadata = constructMetadata({
 });
 
 export default function Dashboard({
-  pageDetails,
-  getLinksByPageHandle,
-  getPublicUrl,
+  pageHandle,
 }: {
-  pageDetails: PagesRow;
-  getLinksByPageHandle: any;
-  getPublicUrl: any;
+  readonly pageHandle: string;
 }) {
   const [showConfetti, setShowConfetti] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>();
 
   const { isDialogOpen, linkToEdit, setIsDialogOpen } = useAddEditDialog();
   const { links, setLinks } = useLinks((state) => state);
+
+  const { data: dataA, error: pageDetailsError, isLoading: pageLoading } = useQuery({
+    queryKey: [`dashboard-page-details`],
+    queryFn: () => getPageByPageHandle(pageHandle),
+    gcTime: 0
+  });
+
+  const {
+    data: dataB,
+    error: linksError,
+    isLoading: linksLoading,
+  } = useQuery({
+    queryKey: [`dashboard-links`],
+    queryFn: () => getLinksByPageHandle(pageHandle),
+    gcTime: 0
+  });
+  
+  let pageDetails = dataA?.pageDetails
 
   let sortOrder = pageDetails?.links_sort_order as string[];
 
@@ -57,36 +72,21 @@ export default function Dashboard({
   );
 
   useEffect(() => {
-    async function getLinks() {
-      setIsLoading(true);
-      if (getLinksByPageHandle) {
-        const { linksData, linksError } = await getLinksByPageHandle(
-          pageDetails?.page_handle as string
-        );
+    console.log("data", dataB?.linksData);
+    setLinks(dataB?.linksData);
+  }, [dataB]);
 
-        if (linksError) {
-          //
-          console.log(linksError);
-        }
-
-        if (linksData && sortOrder) {
-          setLinks(getSortedLinks(linksData));
-          setIsLoading(false);
-        }
-      }
-    }
-
+  useEffect(() => {
     async function getAvatarUrl() {
-      if(getPublicUrl) {
+      if (getPublicUrl) {
         const { publicUrl } = await getPublicUrl(
           pageDetails?.avatar_id as string
         );
-  
+
         setAvatarUrl(publicUrl);
       }
     }
 
-    getLinks();
     getAvatarUrl();
   }, [sortOrder]);
 
@@ -95,6 +95,18 @@ export default function Dashboard({
       setIsDialogOpen(false, undefined);
     }
   }, [isDialogOpen, linkToEdit]);
+  
+  if(linksError || pageDetailsError){
+    return <div>
+      some error happend
+    </div>
+  }
+  
+  if(linksLoading || pageLoading){
+    return <div>
+      page loading
+    </div>
+  }
 
   return (
     <div
