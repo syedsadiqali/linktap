@@ -60,7 +60,7 @@ export default function Dashboard({
 
   const getSortedLinks = useCallback(
     (linksData: any) => {
-      return linksData.sort(
+      return linksData?.sort(
         (a: LinksRow, b: LinksRow) =>
           sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
       );
