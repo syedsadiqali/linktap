@@ -772,6 +772,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                           "fill",
                         ),
                       )}
+                      // @ts-ignore
                       cn={cnCoord}
                       cy={cyCoord}
                       r={5}
@@ -808,6 +809,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                     return (
                       <Dot
                         key={index}
+                        // @ts-ignore
                         cn={cnCoord}
                         cy={cyCoord}
                         r={5}
