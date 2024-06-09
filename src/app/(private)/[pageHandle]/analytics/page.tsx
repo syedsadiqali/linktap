@@ -10,7 +10,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { BrowserBarList } from "./_components/browser-bar-list";
+import { BarListComp } from "./_components/bar-list";
 import {
   Card,
   CardContent,
@@ -19,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Interval } from "@/types/utils";
+import { AnalyticsCard } from "./_components/analytics-card";
 
 export const revalidate = 0;
 
@@ -29,7 +30,7 @@ export default function PageA({
   readonly params: { pageHandle: string };
   readonly searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const { aFor, interval } = searchParams as { [key: string]: string };
+  const { aFor, interval, linkId } = searchParams as { [key: string]: string };
 
   let keyStringForBrowser = `aFor=${aFor}&interval=${interval}`;
 
@@ -37,9 +38,21 @@ export default function PageA({
     <>
       <div className="flex justify-between items-center space-y-0.5">
         <TabChange aFor={aFor} />
-        <Filters />
+        <Filters aFor={aFor} pageHandle={params.pageHandle} linkId={linkId} />
       </div>
       <Separator className="my-6" />
+
+      <div className="grid grid-cols-4 gap-4 my-4">
+        <AnalyticsCard
+          aFor={aFor}
+          pageHandle={params.pageHandle}
+          interval={interval as Interval}
+          linkId={linkId}
+          aType={"clicks"}
+          title={"Total Clicks"}
+        />
+        
+      </div>
 
       <div className="w-full grid gap-4 grid-cols-2 grid-rows-3 min-h-[400px]">
         <div className="col-span-2">
@@ -47,14 +60,29 @@ export default function PageA({
             aFor={aFor}
             pageHandle={params.pageHandle}
             interval={interval}
+            linkId={linkId}
           />
         </div>
 
         <div className="min-h-[400px]">
-          <BrowserBarList
+          <BarListComp
             aFor={aFor}
             pageHandle={params.pageHandle}
             interval={interval as Interval}
+            linkId={linkId}
+            aType={"browser"}
+            
+          />
+        </div>
+
+        <div className="min-h-[400px]">
+          <BarListComp
+            aFor={aFor}
+            pageHandle={params.pageHandle}
+            interval={interval as Interval}
+            linkId={linkId}
+            aType={"country"}
+            showCountryFilter={true}
           />
         </div>
 

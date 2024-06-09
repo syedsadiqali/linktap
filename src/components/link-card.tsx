@@ -18,15 +18,28 @@ import { useLinks } from "@/hooks/useLinks";
 import { useAddEditDialog } from "@/hooks/useAddEditDialog";
 import Image from "next/image";
 import { ConfirmAction } from "./confirm-action";
+import { Skeleton } from "./ui/skeleton";
 
 interface IProps {
   link: LinksRow | Partial<LinksRow>;
   isEditable?: boolean;
   className?: string;
   isPreview?: boolean;
+  isLoading?: boolean;
 }
 
 export const LinkCard = (props: IProps) => {
+  if (props.isLoading) {
+    return !props.isEditable ? (
+      <Skeleton
+        className={`h-24 ${
+          props.isPreview ? `lg:w-5/6` : `w-5/6`
+        } lg:w-1/3 my-2`}
+      />
+    ) : (
+      <Skeleton className={`h-24 w-full sm:w-5/6 lg:w-3/5 my-2`} />
+    );
+  }
   return !props.isEditable ? (
     <Link
       href={`/l/${props.link.link_url}`}
@@ -79,12 +92,14 @@ const CardA = ({ link, isEditable, className }: IProps) => {
               <CardDescription className="">
                 <div className="flex gap-1">
                   <ConfirmAction
-                    buttonLabel={<Trash2
-                      size={20}
-                      className="cursor-pointer drop-shadow-md"
-                    />}
-                    title={'Confirm Delete'}
-                    question={'Are you sure you want to delete this link ?'}
+                    buttonLabel={
+                      <Trash2
+                        size={20}
+                        className="cursor-pointer drop-shadow-md"
+                      />
+                    }
+                    title={"Confirm Delete"}
+                    question={"Are you sure you want to delete this link ?"}
                     isLoading={isDeleting}
                     confirmAction={() => {
                       setIsDeleting(true);

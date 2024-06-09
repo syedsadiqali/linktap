@@ -5,7 +5,6 @@ import config from "@/config";
 import { getSortedLinks } from "@/lib/utils";
 import { getPageByPageHandle, getPublicUrl } from "@/server/actions/page";
 import { getLinksByPageHandle } from "@/server/actions/links";
-import { waitUntil } from "@vercel/functions"
 
 async function getPageDetails(page_handle: string) {
   const { pageDetails } = await getPageByPageHandle(page_handle);
@@ -33,22 +32,19 @@ export async function generateMetadata({
   const { pageDetails } = await getPageDetails(params.pageHandle);
 
   return constructMetadata({
-    title: `${pageDetails?.page_name || "User"} – ${config.appName}`,
-    description: pageDetails?.bio || "List of Links",
+    title: `${pageDetails?.page_name ?? "User"} – ${config.appName}`,
+    description: pageDetails?.bio ?? "List of Links",
   });
 }
 
 export default async function Page({
   params,
 }: {
-  params: { pageHandle: string };
+  readonly params: { pageHandle: string };
 }) {
-  
-
-  
   const { pageDetails } = await getPageDetails(params.pageHandle);
   const { linksData } = await getLinksData(params.pageHandle);
-  
+
   if (!pageDetails || !linksData) {
     notFound();
   }

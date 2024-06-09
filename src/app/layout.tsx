@@ -29,7 +29,9 @@ export default async function RootLayout({ children }: any) {
           <TopLoader />
           <Provider>{children}</Provider>
         </ThemeProvider>
-        <GoogleAnalytics gaId="G-3WDXTQNJ7G" />
+        {process.env.NODE_ENV === "production" && (
+          <GoogleAnalytics gaId="G-3WDXTQNJ7G" />
+        )}
         <Toaster />
       </body>
     </html>

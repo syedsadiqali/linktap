@@ -52,6 +52,8 @@ export async function recordClick({
   //   }
   // }
 
+  const supabase = createClient();
+
   return await Promise.allSettled([
     fetch(
       `${process.env.TINYBIRD_API_URL}/v0/events?name=click_events&wait=true`,
@@ -108,29 +110,9 @@ export async function recordClick({
     // increment the click count for the link or domain (based on their ID)
     // also increment the usage count for the workspace
     // and then we have a cron that will reset it at the start of new billing cycle
-    // root
-    //   ? [
-    //       conn.execute(
-    //         "UPDATE Domain SET clicks = clicks + 1, lastClicked = NOW() WHERE id = ?",
-    //         [id],
-    //       ),
-    //       // only increment workspace clicks if there is a destination URL configured (not placeholder landing page)
-    //       url &&
-    //         conn.execute(
-    //           "UPDATE Project p JOIN Domain d ON p.id = d.projectId SET p.usage = p.usage + 1 WHERE d.id = ?",
-    //           [id],
-    //         ),
-    //     ]
-    //   : [
-    //       conn.execute(
-    //         "UPDATE Link SET clicks = clicks + 1, lastClicked = NOW() WHERE id = ?",
-    //         [id],
-    //       ),
-    //       conn.execute(
-    //         "UPDATE Project p JOIN Link l ON p.id = l.projectId SET p.usage = p.usage + 1 WHERE l.id = ?",
-    //         [id],
-    //       ),
-    //     ],
+    root
+      ? [await supabase.rpc("increment_page_views", { page_id: id })]
+      : [await supabase.rpc("increment_link_clicks", { link_id: id })],
   ]);
 }
 
@@ -219,124 +201,124 @@ interface InputSchema {
 //     data: { session },
 //   } = await supabase.auth.getSession();
 
-  // if (!session) {
-  //   return new Response("UnAuthorized", { status: 401 });
-  // }
+// if (!session) {
+//   return new Response("UnAuthorized", { status: 401 });
+// }
 
-  // const searchParams = request.nextUrl.searchParams;
+// const searchParams = request.nextUrl.searchParams;
 
-  // let filterP = JSON.parse(searchParams.get("filter"));
+// let filterP = JSON.parse(searchParams.get("filter"));
 
-  // const requestjson = inputSchema.safeParse({
-  //   groupedBy: searchParams.get("group_by"),
-  //   aFor: searchParams.get("aFor"),
-  //   from: searchParams.get("from"),
-  //   to: searchParams.get("to"),
-  //   filter: filterP,
-  //   sort: searchParams.get("sort"),
-  //   granularity: searchParams.get("granularity"),
-  // });
+// const requestjson = inputSchema.safeParse({
+//   groupedBy: searchParams.get("group_by"),
+//   aFor: searchParams.get("aFor"),
+//   from: searchParams.get("from"),
+//   to: searchParams.get("to"),
+//   filter: filterP,
+//   sort: searchParams.get("sort"),
+//   granularity: searchParams.get("granularity"),
+// });
 
-  // if (!requestjson.success) {
-  //   const { errors } = requestjson.error;
+// if (!requestjson.success) {
+//   const { errors } = requestjson.error;
 
-  //   return Response.json(
-  //     {
-  //       error: { message: "Invalid request", errors },
-  //     },
-  //     {
-  //       status: 400,
-  //     },
-  //   );
-  // }
+//   return Response.json(
+//     {
+//       error: { message: "Invalid request", errors },
+//     },
+//     {
+//       status: 400,
+//     },
+//   );
+// }
 
-  // let { aFor, from, to, filter, sort, groupedBy, granularity } =
-  //   requestjson.data;
+// let { aFor, from, to, filter, sort, groupedBy, granularity } =
+//   requestjson.data;
 
-  // let fromD, toD, sortD, filterD, groupD;
+// let fromD, toD, sortD, filterD, groupD;
 
-  // if (!from) {
-  //   fromD = new Date(0).toISOString();
-  // } else {
-  //   fromD = new Date(from).toISOString();
-  // }
+// if (!from) {
+//   fromD = new Date(0).toISOString();
+// } else {
+//   fromD = new Date(from).toISOString();
+// }
 
-  // if (!to) {
-  //   toD = new Date().toISOString();
-  // } else {
-  //   toD = new Date(to).toISOString();
-  // }
+// if (!to) {
+//   toD = new Date().toISOString();
+// } else {
+//   toD = new Date(to).toISOString();
+// }
 
-  // if (!filter) {
-  //   filterD = "";
-  // } else {
-  //   const entries = Object.entries(filter);
-  //   const keyValuePairs = entries.map(([key, value]) => `${key}='${value}'`);
-  //   filterD = ` ${keyValuePairs.join(" and ")} `;
-  // }
+// if (!filter) {
+//   filterD = "";
+// } else {
+//   const entries = Object.entries(filter);
+//   const keyValuePairs = entries.map(([key, value]) => `${key}='${value}'`);
+//   filterD = ` ${keyValuePairs.join(" and ")} `;
+// }
 
-  // if (!sort) {
-  //   sortD = "";
-  // }
+// if (!sort) {
+//   sortD = "";
+// }
 
-  // if (groupedBy == "date") {
-  //   // we will use date_truc
+// if (groupedBy == "date") {
+//   // we will use date_truc
 
-  //   groupD = `date_trunc('${granularity || "day"}', timestamp)`;
-  // }
+//   groupD = `date_trunc('${granularity || "day"}', timestamp)`;
+// }
 
-  // const response = await getAnalytics({
-  //   // workspaceId can be undefined (for public links that haven't been claimed/synced to a workspace)
-  //   ...(link.projectId && { workspaceId: link.projectId }),
-  //   linkId: link.id,
-  //   endpoint,
-  //   ...parsedParams,
-  // });
+// const response = await getAnalytics({
+//   // workspaceId can be undefined (for public links that haven't been claimed/synced to a workspace)
+//   ...(link.projectId && { workspaceId: link.projectId }),
+//   linkId: link.id,
+//   endpoint,
+//   ...parsedParams,
+// });
 
-  // const { data, error } = await supabase.rpc("get_grouped_data_query", {
-  //   table_name: tableMap[aFor],
-  //   group_by_column: groupD || groupedBy,
-  //   filter_string: filterD,
-  //   from_timestamp: fromD,
-  //   to_timestamp: toD,
-  // });
+// const { data, error } = await supabase.rpc("get_grouped_data_query", {
+//   table_name: tableMap[aFor],
+//   group_by_column: groupD || groupedBy,
+//   filter_string: filterD,
+//   from_timestamp: fromD,
+//   to_timestamp: toD,
+// });
 
-  // const { data: data1, error: error1 } = await supabase.rpc(
-  //   "get_grouped_data_query1",
-  //   {
-  //     table_name: "links_tracking_data",
-  //     group_by_column: groupD || groupedBy,
-  //     filter_string: filterD,
-  //     from_timestamp: fromD,
-  //     to_timestamp: toD,
-  //   }
-  // );
+// const { data: data1, error: error1 } = await supabase.rpc(
+//   "get_grouped_data_query1",
+//   {
+//     table_name: "links_tracking_data",
+//     group_by_column: groupD || groupedBy,
+//     filter_string: filterD,
+//     from_timestamp: fromD,
+//     to_timestamp: toD,
+//   }
+// );
 
-  // console.log("query was ", data1);
+// console.log("query was ", data1);
 
-  // console.log("error", error);
+// console.log("error", error);
 
-  // if (error) {
-  //   return Response.json(
-  //     {
-  //       error: { message: "Invalid request", error },
-  //     },
-  //     {
-  //       status: 400,
-  //     }
-  //   );
-  // }
+// if (error) {
+//   return Response.json(
+//     {
+//       error: { message: "Invalid request", error },
+//     },
+//     {
+//       status: 400,
+//     }
+//   );
+// }
 
-  //
-  //
+//
+//
 
-  // return data;
+// return data;
 
-  // convert these to utc and send a rpc call to supabase to get the data.
+// convert these to utc and send a rpc call to supabase to get the data.
 
-  // let fromInUtc = new Date(from).toISOString();
+// let fromInUtc = new Date(from).toISOString();
 
-  // let toInUtc = new Date(to).toISOString();
+// let toInUtc = new Date(to).toISOString();
 // }
 
 export const getAnalyticsData = async ({

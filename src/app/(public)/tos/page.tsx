@@ -2,7 +2,7 @@ import Link from "next/link";
 // import { getSEOTags } from "@/libs/seo";
 import config from "@/config";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
 
 function TOS() {
   return (

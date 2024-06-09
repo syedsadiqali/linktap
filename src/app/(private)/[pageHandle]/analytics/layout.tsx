@@ -3,10 +3,13 @@ import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import Filters from "./_components/filters";
 
-export const metadata: Metadata = {
-  title: "Forms",
-  description: "Advanced form example using react-hook-form and Zod.",
-};
+import config from "@/config";
+import { constructMetadata } from "@/lib/utils/seo";
+
+export const metadata = constructMetadata({
+  title: `Analytics - ${config.appName}`,
+  description: "Open Source Link In Bio Tool",
+});
 
 const sidebarNavItems = [
   {

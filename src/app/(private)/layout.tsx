@@ -30,11 +30,11 @@ export default async function Layout({ children }: any) {
   }
 
   if (!user) {
-    // redirect("/login");
+    redirect("/login");
   }
 
   if (isLoggedInAndPageHandleNotCreated && pathname !== "login/init") {
-    // redirect("/login/init");
+    redirect("/login/init");
   }
 
   return (

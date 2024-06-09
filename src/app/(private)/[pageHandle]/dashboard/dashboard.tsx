@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
 import {
@@ -24,6 +24,7 @@ import { useAddEditDialog } from "@/hooks/useAddEditDialog";
 import ConfettiA from "@/components/confetti";
 import { useQuery } from "@tanstack/react-query";
 import { getLinksByPageHandle } from "@/server/actions/links";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata = constructMetadata({
   title: `Dashboard – ${config.appName}`,
@@ -59,7 +60,7 @@ export default function Dashboard({
   } = useQuery({
     queryKey: [`dashboard-links`],
     queryFn: () => getLinksByPageHandle(pageHandle),
-    staleTime: 1000,
+    staleTime: 0,
   });
 
   let pageDetails = dataA?.pageDetails;
@@ -106,13 +107,13 @@ export default function Dashboard({
     return <div>some error happend</div>;
   }
 
-  if (linksLoading || pageLoading) {
-    return (
-      <div className="flex justify-center col-span-2 space-y-6 w-full h-[200px] items-center">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
-  }
+  // if (linksLoading || pageLoading) {
+  //   return (
+  //     <div className="flex justify-center col-span-2 space-y-6 w-full h-[200px] items-center">
+  //       <Loader2 className="animate-spin" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -129,12 +130,23 @@ export default function Dashboard({
             </AvatarFallback>
           </Avatar>
         </Suspense>
-        <div className="text-lg font-semibold">@{pageDetails?.page_handle}</div>
+
+        <div className="text-lg font-semibold">
+          {pageLoading ? (
+            <Skeleton className="h-6 w-[100px] text-center" />
+          ) : (
+            `@${pageDetails?.page_handle}`
+          )}
+        </div>
 
         <div className="w-4/5 sm:w-1/5 mt-2 mb-8 text-center ">
-          <p className="leading-7 [&:not(:first-child)]:mt-6 ">
-            {pageDetails?.bio}
-          </p>
+          {pageLoading ? (
+            <Skeleton className="h-6 mt-1 w-[200px] text-center leading-7 [&:not(:first-child)]:mt-6 " />
+          ) : (
+            <p className="leading-7 [&:not(:first-child)]:mt-6 ">
+              {pageDetails?.bio}
+            </p>
+          )}
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -150,14 +162,19 @@ export default function Dashboard({
             />
           </DialogContent>
         </Dialog>
-
-        {links && pageDetails && (
+        {linksLoading ? (
+          <>
+            <Skeleton className={`h-24 w-full sm:w-5/6 lg:w-3/5 my-2`} />
+            <Skeleton className={`h-24 w-full sm:w-5/6 lg:w-3/5 my-2`} />
+          </>
+        ) : (
           <LinksList
             pageDetails={pageDetails}
             links={links}
             setLinks={setLinks}
             sortOrder={pageDetails?.links_sort_order}
             updateSortingOrder={updateSortingOrder}
+            isLoading={linksLoading}
           />
         )}
       </div>

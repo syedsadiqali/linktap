@@ -3,10 +3,10 @@ import { LinkCard } from "@/components/link-card";
 import { updateSortingOrder } from "@/server/actions/page";
 import { LinksRow } from "@/types/utils";
 
-export default function LinksList({ links, pageDetails, setLinks }: any) {
+export default function LinksList({ links, pageDetails, setLinks, isLoading }: any) {
   return (
     <SortableList<LinksRow>
-      items={links}
+      items={links || []}
       onChange={async (items) => {
         let ab = items.map((a) => a.id);
         
@@ -16,7 +16,7 @@ export default function LinksList({ links, pageDetails, setLinks }: any) {
       }}
       renderItem={(item) => (
         <SortableList.Item id={item.id}>
-          <LinkCard isEditable={true} link={item} key={item.id} />
+          <LinkCard isEditable={true} link={item} key={item.id} isLoading={isLoading}/>
         </SortableList.Item>
       )}
     />

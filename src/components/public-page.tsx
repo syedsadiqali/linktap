@@ -4,7 +4,15 @@ import { getInitials } from "@/lib/utils";
 import { LinksRow, PagesRow } from "@/types/utils";
 import Link from "next/link";
 import LinkTapLogo from "./LinkTapLogo";
-import ContentLoader from "react-content-loader";
+
+interface IProps {
+  readonly pageDetails?: PagesRow;
+  readonly links?: Partial<LinksRow>[];
+  readonly isPreview?: boolean;
+  readonly theme?: string;
+  readonly avatarUrl?: string;
+  readonly className?: string;
+}
 
 export default function PublicPage({
   pageDetails,
@@ -13,23 +21,13 @@ export default function PublicPage({
   avatarUrl,
   theme,
   className,
-  isSuspenseLoading,
-}: {
-  pageDetails?: PagesRow;
-  links?: Partial<LinksRow>[];
-  isPreview?: boolean;
-  theme?: string;
-  avatarUrl?: string;
-  className?: string;
-  isSuspenseLoading?: boolean;
-}) {
+}: IProps) {
   return (
     <div
       className={`flex flex-col items-center pt-16 w-full h-full ${className}`}
       data-theme={theme || "light"}
     >
-      {isSuspenseLoading ? (
-        <ContentLoader
+      {/* <ContentLoader
           speed={1}
           width={"78"}
           height={100}
@@ -40,18 +38,17 @@ export default function PublicPage({
         >
           <circle cx="38" cy="38" r="38" />
         </ContentLoader>
-      ) : (
-        <Avatar variant={"xl"}>
-          <AvatarImage src={avatarUrl as string} />
-          <AvatarFallback>
-            {getInitials(pageDetails?.page_name as string)}
-          </AvatarFallback>
-        </Avatar>
-      )}
+      )  */}
 
-      {isSuspenseLoading ? (
-        <ContentLoader
-        speed={1}
+      <Avatar variant={"xl"}>
+        <AvatarImage src={avatarUrl as string} />
+        <AvatarFallback>
+          {getInitials(pageDetails?.page_name as string)}
+        </AvatarFallback>
+      </Avatar>
+
+      {/* <ContentLoader
+          speed={1}
           width={"100"}
           height={20}
           viewBox="0 0 100 20"
@@ -60,13 +57,13 @@ export default function PublicPage({
           className="rounded-md"
         >
           <rect x="0" y="0" rx="3" ry="3" width="100" height="24" />
-        </ContentLoader>
-      ) : (
-        <div className="text-lg font-semibold">@{pageDetails?.page_handle}</div>
-      )}
+        </ContentLoader> */}
+      {/* ) : ( */}
+      <div className="text-lg font-semibold">@{pageDetails?.page_handle}</div>
+      {/* )} */}
 
-      {isSuspenseLoading ? (
-        <ContentLoader
+      {/* {isSuspenseLoading ? ( */}
+      {/* <ContentLoader
           width={"260"}
           height={100}
           viewBox="0 0 260 20"
@@ -78,17 +75,17 @@ export default function PublicPage({
           <rect x="14" y="67" rx="3" ry="3" width="235" height="19" />
           <rect x="4" y="99" rx="3" ry="3" width="260" height="19" />
         </ContentLoader>
-      ) : (
-        <div
-          className={`${
-            isPreview ? `lg:w-5/6` : `w-5/6`
-          } w-4/5 lg:w-1/5 mt-2 mb-8 text-center `}
-        >
-          <p className="leading-7 [&:not(:first-child)]:mt-6 ">
-            {pageDetails?.bio}
-          </p>
-        </div>
-      )}
+      ) : ( */}
+      <div
+        className={`${
+          isPreview ? `lg:w-5/6` : `w-5/6`
+        } w-4/5 lg:w-1/5 mt-2 mb-8 text-center `}
+      >
+        <p className="leading-7 [&:not(:first-child)]:mt-6 ">
+          {pageDetails?.bio}
+        </p>
+      </div>
+      {/* )} */}
 
       {links?.map((link) => (
         <LinkCard

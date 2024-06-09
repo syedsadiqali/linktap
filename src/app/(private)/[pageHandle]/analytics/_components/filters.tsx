@@ -1,9 +1,8 @@
 "use client";
 
-import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { createUrl } from "@/lib/utils/common";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import {
   Select,
@@ -14,15 +13,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query";
+import { getLinksByPageHandle } from "@/server/actions/links";
 
-export default function Filters() {
+export default function Filters({
+  pageHandle,
+  linkId,
+  aFor,
+}: {
+  readonly pageHandle: string;
+  readonly linkId: string;
+  readonly aFor: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  console.log(searchParams);
-
-  // const [tab, setTab] = useState(aFor || "links");
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -34,38 +39,63 @@ export default function Filters() {
     [searchParams]
   );
 
+  const {
+    data: dataB,
+    error: linksError,
+    isLoading: linksLoading,
+  } = useQuery({
+    queryKey: [`dashboard-links`],
+    queryFn: () => getLinksByPageHandle(pageHandle),
+    staleTime: 0,
+  });
+
+  const updateQueryParams = (name: string, value: string) => {
+    const aFor = searchParams.get("aFor");
+    const interval = searchParams.get("interval");
+    
+    let newParams: Record<string, string> = {
+      ...(aFor && { aFor }),
+      ...(interval && { interval }),
+    }
+    
+    newParams[name] = value;
+
+    let url = createUrl(
+      pathname,
+      new URLSearchParams(newParams)
+    );
+    
+    router.push(url);
+  };
+
   return (
-    <>
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Fruits</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+    <div className="flex gap-2">
+      {aFor === "links" ? (
+        <Select
+          defaultValue={linkId || "all"}
+          onValueChange={(value) => updateQueryParams("linkId", value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All</SelectItem>
+              {dataB?.linksData?.map((link) => {
+                return (
+                  <SelectItem key={link.id} value={link.id}>
+                    {link.link_url}
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      ) : null}
       <Select
         defaultValue={searchParams.get("interval") || "1h"}
-        onValueChange={(value) => {
-          const aFor = searchParams.get("aFor");
-
-          let url = createUrl(
-            pathname,
-            new URLSearchParams({
-              ...(aFor && { aFor }),
-              interval: value,
-            })
-          );
-          router.push(url);
-        }}
-      >
+        onValueChange={(value) => updateQueryParams("interval", value)}
+        >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Interval" />
         </SelectTrigger>
@@ -81,6 +111,6 @@ export default function Filters() {
           </SelectGroup>
         </SelectContent>
       </Select>
-    </>
+    </div>
   );
 }

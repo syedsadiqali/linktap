@@ -17,6 +17,10 @@ export default function TabChange({ aFor }: { aFor: string }) {
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set(name, value);
+      
+      if(value === "page") {
+        params.delete("linkId")
+      }
 
       return params.toString();
     },

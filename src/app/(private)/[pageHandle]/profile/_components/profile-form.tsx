@@ -1,6 +1,5 @@
 "use client";
 
-import ContentLoader from "react-content-loader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -25,6 +24,7 @@ import ImageUploadDialog from "@/components/image-upload-dialog";
 import { getInitials, uuidv4 } from "@/lib/utils";
 import { getPublicUrl, removeImage } from "@/server/actions/page";
 import { createOrUpdateAvatar } from "@/lib/db/page";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface IProps {
   user: any;
@@ -207,31 +207,11 @@ IProps) {
                         </AvatarFallback>
                       </Avatar>
                       {isSuspenseLoading ? (
-                        <ContentLoader
-                          width={"100%"}
-                          height={100}
-                          viewBox="0 0 100% 200"
-                          backgroundColor="#d9d9d9"
-                          foregroundColor="#ededed"
-                          className="rounded-md"
-                        >
-                          <rect
-                            x="10"
-                            y="15"
-                            rx="3"
-                            ry="3"
-                            width="80px"
-                            height="30"
-                          />
-                          <rect
-                            x="10"
-                            y="50"
-                            rx="3"
-                            ry="3"
-                            width="80px"
-                            height="30"
-                          />
-                        </ContentLoader>
+                        
+                        <div className="flex flex-col space-y-2">
+                          <Skeleton className="h-8 w-[100px]" />
+                          <Skeleton className="h-8 w-[100px]" />
+                        </div>
                       ) : (
                         <div className="flex flex-col space-y-2">
                           <Button
@@ -321,16 +301,7 @@ IProps) {
               <FormLabel>Username</FormLabel>
               <FormControl>
                 {isSuspenseLoading ? (
-                  <ContentLoader
-                    width={"100%"}
-                    height={36}
-                    viewBox="0 0 100% 100"
-                    backgroundColor="#d9d9d9"
-                    foregroundColor="#ededed"
-                    className="rounded-md"
-                  >
-                    <rect x="0" y="0" rx="3" ry="3" width="100%" height="50" />
-                  </ContentLoader>
+                  <Skeleton className="h-10 w-full" />
                 ) : (
                   <Input placeholder="syedsadiqali" {...field} />
                 )}
@@ -353,16 +324,7 @@ IProps) {
               <FormLabel>Full Name</FormLabel>
               <FormControl>
                 {isSuspenseLoading ? (
-                  <ContentLoader
-                    width={"100%"}
-                    height={36}
-                    viewBox="0 0 100% 100"
-                    backgroundColor="#d9d9d9"
-                    foregroundColor="#ededed"
-                    className="rounded-md"
-                  >
-                    <rect x="0" y="0" rx="3" ry="3" width="100%" height="50" />
-                  </ContentLoader>
+                  <Skeleton className="h-10 w-full" />
                 ) : (
                   <Input placeholder="Mark Zukku" {...field} />
                 )}
@@ -386,23 +348,7 @@ IProps) {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   {isSuspenseLoading ? (
-                    <ContentLoader
-                      width={"100%"}
-                      height={36}
-                      viewBox="0 0 100% 100"
-                      backgroundColor="#d9d9d9"
-                      foregroundColor="#ededed"
-                      className="rounded-md"
-                    >
-                      <rect
-                        x="0"
-                        y="0"
-                        rx="3"
-                        ry="3"
-                        width="100%"
-                        height="50"
-                      />
-                    </ContentLoader>
+                    <Skeleton className="h-10 w-full" />
                   ) : (
                     <Input
                       placeholder="me@mymail.com"
@@ -429,16 +375,7 @@ IProps) {
               <FormLabel>Bio</FormLabel>
               <FormControl>
                 {isSuspenseLoading ? (
-                  <ContentLoader
-                    width={"100%"}
-                    height={60}
-                    viewBox="0 0 100% 100"
-                    backgroundColor="#d9d9d9"
-                    foregroundColor="#ededed"
-                    className="rounded-md"
-                  >
-                    <rect x="0" y="0" rx="3" ry="3" width="100%" height="60" />
-                  </ContentLoader>
+                  <Skeleton className="h-10 w-full" />
                 ) : (
                   <Textarea
                     placeholder="Tell us a little bit about yourself"

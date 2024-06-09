@@ -31,10 +31,6 @@ export default async function SettingsProfilePage({
   const { user } = await getCurrentAuthedUser();
   const { pageDetails } = await getPageByPageHandle(params.pageHandle);
 
-  if (!user) {
-    redirect("/");
-  }
-
   if (!pageDetails) {
     return notFound();
   }
