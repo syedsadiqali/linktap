@@ -33,7 +33,6 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   // check if it's a public handle
   if (!RESERVED_ROUTES.includes(`/${lastPathSegment}`)) {
     const { pageDetails } = await getPageByPageHandle(key);
-    console.log('shit ', fullUrl)
     if (pageDetails?.id) {
       ev.waitUntil(
         recordClick({

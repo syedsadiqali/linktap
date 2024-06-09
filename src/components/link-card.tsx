@@ -43,6 +43,7 @@ export const LinkCard = (props: IProps) => {
   return !props.isEditable ? (
     <Link
       href={`/l/${props.link.link_url}`}
+      prefetch={false}
       target="_blank"
       className={`${props.isPreview ? `lg:w-5/6` : `w-5/6`} lg:w-1/3 my-2`}
     >
